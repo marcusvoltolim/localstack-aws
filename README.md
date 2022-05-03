@@ -1,6 +1,8 @@
 ## Motivação
 
-Projeto SpringBoot Web com Groovy/Java exemplificando como criar uma configuração com [**LocalStack**](https://github.com/localstack/localstack).
+Projeto SpringBoot Web com Groovy/Java exemplificando como criar uma configuração com [**LocalStack**](https://github.com/localstack/localstack) coexistindo
+com a configuração de "produção" que acessa a AWS real.
+
 LocalStack é um emulador de serviços em nuvem que pode ser executado na sua máquina
 fornecendo uma estrutura de teste/simulação fácil de usar para desenvolver seus aplicativos em nuvem.
 
