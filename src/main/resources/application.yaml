@@ -6,7 +6,8 @@ application:
   dynamo:
     tables:
       names: Table1, Table2
-####
+  localstack: true
 spring:
   profiles:
     include: localstack
+

@@ -1,8 +1,9 @@
 package io.marcusvoltolim.examples.localstack.configs
 
+import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition
 import software.amazon.awssdk.services.dynamodb.model.BillingMode
@@ -14,7 +15,8 @@ import software.amazon.awssdk.services.sqs.SqsClient
 
 import javax.annotation.PostConstruct
 
-@Profile('localstack')
+@ConditionalOnProperty(value = 'application.localstack', havingValue = 'true')
+@Slf4j
 @Configuration
 class LocalStackConfig {
 
@@ -35,8 +37,10 @@ class LocalStackConfig {
 
     @PostConstruct
     void init() {
+        log.info('Starting LocalStack resources creation')
         initDynamo()
         initSqs()
+        log.info('Finished LocalStack resources creation')
     }
 
     void initDynamo() {
