@@ -1,0 +1,33 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.7'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'groovy'
+}
+
+group = 'io.marcusvoltolim.examples'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    awsSdkVersion = '2.17.181'
+}
+
+dependencies {
+    implementation 'org.codehaus.groovy:groovy'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    //aws
+    implementation platform("software.amazon.awssdk:bom:${awsSdkVersion}")
+    implementation 'software.amazon.awssdk:sqs'
+    implementation 'software.amazon.awssdk:dynamodb'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
