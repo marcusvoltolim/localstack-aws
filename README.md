@@ -40,15 +40,15 @@ Vamos usar a configuração do Spring *spring:profiles.include* para informar se
 ### LocalStack - com docker-compose
 
 * Necessário ter docker e docker-compose instalados;
-* Execute o comando `docker-compose -up` na raiz do projeto;
+* Execute o seguinte comando na raiz do projeto: `docker-compose -up`;
 * Após iniciar, os recursos do LocalStack estarão disponíveis na porta: `4566` e região: `sa-east-1`
-* As configurações podem ser alteradas no arquivo [docker-compose.yaml](docker-compose.yaml), além de (des)ativar os serviços desajados.
+* As configurações podem ser alteradas no arquivo [docker-compose.yaml](docker-compose.yaml), além de (des)ativar os serviços desejados.
 
 ### Aplicação
 
 * Existem diversas maneiras de iniciar uma aplicação SpringBoot;
 * Pode usar sua IDE de preferência (eu uso IntelliJ);
-* Ou executar o seguinte comando: `./gradlew bootRun`
+* Ou executar o seguinte comando na raiz do projeto: `./gradlew bootRun`
 * Independente de como executar, em caso de sucesso terá o log: *Tomcat started on port(s): 8080 (http) with context path ''*,
   informando que a aplicação (endpoints) está sendo exposta na porta: *8080*.
 ### Endpoints
