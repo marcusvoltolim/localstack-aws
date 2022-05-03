@@ -1,0 +1,12 @@
+application:
+  aws-region: sa-east-1
+  sqs:
+    queues:
+      names: Queue1, Queue2
+  dynamo:
+    tables:
+      names: Table1, Table2
+####
+spring:
+  profiles:
+    include: localstack
