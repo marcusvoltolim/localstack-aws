@@ -21,14 +21,17 @@ Necessário conhecimento prévio sobre Spring, injeção de dependência...
 Temos 2 configurações para instanciar os beans dos clients AWS de acordo o desejado: real ou local e
 uma configuração para criar os recursos no LocalStack.
 
-* [AwsConfig.groovy](src/main/groovy/io/marcusvoltolim/examples/localstack/configs/AwsConfig.groovy) - usado quando o profile é diferente de `localstack`:
+Vamos usar a configuração do Spring *spring:profiles.include* para informar se vamos executar localmente ou não.
+
+* [AwsConfig.groovy](src/main/groovy/io/marcusvoltolim/examples/localstack/configs/AwsConfig.groovy) - usado quando o profile é diferente de *localstack*:
   * Responsável por instanciar os beans dos clients AWS usando as credenciais informadas nas variáveis de ambiente:
     * AWS_ACCESS_KEY_ID
     * AWS_SECRET_ACCESS_KEY
-* [AwsConfigLocal.groovy](src/main/groovy/io/marcusvoltolim/examples/localstack/configs/AwsConfigLocal.groovy) - Usado quando o profile é `localstack`:
+* [AwsConfigLocal.groovy](src/main/groovy/io/marcusvoltolim/examples/localstack/configs/AwsConfigLocal.groovy) - Usado quando o profile é *localstack*:
   * Responsável por instanciar os beans dos clients AWS apontando para `http://localhost:4566`;
 * [LocalStackConfig.groovy](src/main/groovy/io/marcusvoltolim/examples/localstack/configs/LocalStackConfig.groovy)
   * Responsável por criar os recursos no LocalStack, vamos criar 2 filas no SQS e 2 tabelas no DynamoDB.
+  * Os nomes das filas e tabelas estão no [application.yaml](src/main/resources/application.yaml)
 
 ## Executando
 
@@ -36,15 +39,16 @@ uma configuração para criar os recursos no LocalStack.
 
 * Necessário ter docker e docker-compose instalados;
 * Execute o comando `docker-compose -up` na raiz do projeto;
-* Após iniciar, os recursos do LocalStack estarão disponíveis na porta: `4566` e região: `sa-east-1`'
-* As configurações podem ser alteradas no arquivo `docker-compose.yaml`, além de (des)ativar os serviços desajados.
+* Após iniciar, os recursos do LocalStack estarão disponíveis na porta: `4566` e região: `sa-east-1`
+* As configurações podem ser alteradas no arquivo [docker-compose.yaml](docker-compose.yaml), além de (des)ativar os serviços desajados.
 
 ### Aplicação
 
 * Existem diversas maneiras de iniciar uma aplicação SpringBoot;
-* Pode usar sua IDE de preferência, eu uso intelliJ;
+* Pode usar sua IDE de preferência (eu uso IntelliJ);
 * Ou executar o seguinte comando: `./gradlew bootRun`
-
+* Independente de como executar, em caso de sucesso terá o log: *Tomcat started on port(s): 8080 (http) with context path ''*,
+  informando que a aplicação (endpoints) está sendo exposta na porta: *8080*.
 ### Endpoints
 
 #### DynamoDb
@@ -55,6 +59,8 @@ No [DynamoDbController](src/main/groovy/io/marcusvoltolim/examples/localstack/co
   ```
   curl --location --request GET 'http://localhost:8080/dynamo/list-tables'
   ```
+  ![img.png](docs/dynamo-postman-1.png)
+
 * Inserir um item (json) na tabela:
   ```
   curl --location --request POST 'http://localhost:8080/dynamo?tableName=Table1' \
@@ -63,6 +69,10 @@ No [DynamoDbController](src/main/groovy/io/marcusvoltolim/examples/localstack/co
      "Id": 935,
      "Value": "content"
   }'
+  ```
+  ![img.png](docs/dynamo-postman-2.png)
+
+---
 
 #### SQS
 
@@ -72,6 +82,8 @@ No [SqsController](src/main/groovy/io/marcusvoltolim/examples/localstack/control
   ```
   curl --location --request GET 'http://localhost:8080/sqs/list-queues'
   ```
+  ![img.png](docs/sqs-postman-1.png)
+
 * Postar uma mensagem (json) na fila:
   ```
   curl --location --request POST 'http://localhost:8080/sqs?queueName=Queue1' \
@@ -81,6 +93,7 @@ No [SqsController](src/main/groovy/io/marcusvoltolim/examples/localstack/control
      "Value": "content"
   }'
   ```
+  ![dynamo-postman-2.png](docs/sqs-postman-2.png)
 
 ### Validando
 
@@ -98,13 +111,13 @@ Executando via terminal (macOS):
 
 Após executar podemos verificar e manipular os recursos criados no navegador:
 
-![dynamodb-admin](docs/dynamo-1.png)
+![dynamodb-admin-1](docs/dynamodb-admin-1.png)
 ---
-![dynamodb-admin](docs/dynamo-2.png)
+![dynamodb-admin-2](docs/dynamodb-admin-2.png)
 ---
-![sqs-admin](docs/sqs-1.png)
+![sqs-admin-1](docs/sqs-admin-1.png)
 ---
-![sqs-admin](docs/sqs-2.png)
+![sqs-admin-2](docs/sqs-admin-2.png)
 
 Para mais detalhes segue os respectivos repositórios dos projetos:
 
