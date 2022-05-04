@@ -1,6 +1,6 @@
 ## Motivação
 
-Projeto SpringBoot Web com Groovy/Java exemplificando como criar uma configuração com [**LocalStack**](https://github.com/localstack/localstack) coexistindo
+Projeto SpringBoot Web com Groovy/Java mostrando como configurar o [**LocalStack**](https://github.com/localstack/localstack) coexistindo
 com a configuração de "produção" que acessa a AWS real.
 
 LocalStack é um emulador de serviços em nuvem que pode ser executado na sua máquina
@@ -23,21 +23,25 @@ Necessário conhecimento prévio sobre Spring, injeção de dependência...
 Temos 2 configurações para instanciar os beans dos clients AWS de acordo o desejado: real ou local e
 uma configuração para criar os recursos no LocalStack.
 
-Vamos usar a configuração do Spring *spring:profiles.include* para informar se vamos executar localmente ou não.
+Vamos usar o enviroment do Spring adicionando a configuração **application.localstack** no [application.yaml](src/main/resources/application.yaml) para informar se vamos executar
+localmente ou não.
 
-* [AwsConfig.groovy](src/main/groovy/io/marcusvoltolim/examples/localstack/configs/AwsConfig.groovy) - usado quando o profile é diferente de *localstack*:
+* [AwsConfig.groovy](src/main/groovy/io/marcusvoltolim/examples/localstack/configs/AwsConfig.groovy)
+  * Usado se **application.localstack** é **false** (ou quando não tem a config `matchIfMissing = true`)
   * Responsável por instanciar os beans dos clients AWS usando as credenciais informadas nas variáveis de ambiente:
     * AWS_ACCESS_KEY_ID
     * AWS_SECRET_ACCESS_KEY
-* [AwsConfigLocal.groovy](src/main/groovy/io/marcusvoltolim/examples/localstack/configs/AwsConfigLocal.groovy) - Usado quando o profile é *localstack*:
-  * Responsável por instanciar os beans dos clients AWS apontando para `http://localhost:4566`;
+* [AwsConfigLocal.groovy](src/main/groovy/io/marcusvoltolim/examples/localstack/configs/AwsConfigLocal.groovy)
+  * Usado se **application.localstack** é **true**
+  * Responsável por instanciar os beans dos clients AWS apontando para `http://localhost:4566`
 * [LocalStackConfig.groovy](src/main/groovy/io/marcusvoltolim/examples/localstack/configs/LocalStackConfig.groovy)
+  * Usado se **application.localstack** é **true**
   * Responsável por criar os recursos no LocalStack, vamos criar 2 filas no SQS e 2 tabelas no DynamoDB.
   * Os nomes das filas e tabelas estão no [application.yaml](src/main/resources/application.yaml)
 
 ## Executando
 
-### LocalStack - com docker-compose
+### LocalStack - docker-compose
 
 * Necessário ter docker e docker-compose instalados;
 * Execute o seguinte comando na raiz do projeto: `docker-compose -up`;
@@ -51,6 +55,7 @@ Vamos usar a configuração do Spring *spring:profiles.include* para informar se
 * Ou executar o seguinte comando na raiz do projeto: `./gradlew bootRun`
 * Independente de como executar, em caso de sucesso terá o log: *Tomcat started on port(s): 8080 (http) with context path ''*,
   informando que a aplicação (endpoints) está sendo exposta na porta: *8080*.
+
 ### Endpoints
 
 #### DynamoDb
@@ -99,7 +104,7 @@ No [SqsController](src/main/groovy/io/marcusvoltolim/examples/localstack/control
 
 ### Validando
 
-Podemos usar as aplicações abaixo, que são interfaces visuais para **DynamoDb** e **SQS** para verificar se os recursos foram criados localmente.
+Podemos usar as seguintes aplicações node, que são interfaces visuais para **DynamoDb** e **SQS** para verificar se os recursos foram criados localmente.
 
 Instalando (necesário ter node/npm já instalado):
 
@@ -111,16 +116,21 @@ Executando via terminal (macOS):
 * `DYNAMO_ENDPOINT=http://localhost:4566 AWS_REGION=sa-east-1 dynamodb-admin --open &`
 * `SQS_ENDPOINT=http://localhost:4566 AWS_REGION=sa-east-1 sqs-admin & open http://localhost:8002 &`
 
-Após executar podemos verificar e manipular os recursos criados no navegador:
+Após executar as aplicações podemos consultar e manipular os recursos criados no navegador:
 
+---
 ![dynamodb-admin-1](docs/dynamodb-admin-1.png)
+
 ---
 ![dynamodb-admin-2](docs/dynamodb-admin-2.png)
+
 ---
 ![sqs-admin-1](docs/sqs-admin-1.png)
+
 ---
 ![sqs-admin-2](docs/sqs-admin-2.png)
 
+---
 Para mais detalhes segue os respectivos repositórios dos projetos:
 
 * [dynamodb-admin](https://github.com/aaronshaf/dynamodb-admin)
